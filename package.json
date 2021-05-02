@@ -1,0 +1,8 @@
+{
+  "name": "nbs-viewer",
+  "version": "0.0.1",
+  "description": "Reads Note Block Song (.nbs) files",
+  "main": "index.js",
+  "author": "DGigsTV",
+  "license": "MIT"
+}
