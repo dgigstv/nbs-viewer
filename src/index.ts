@@ -1,11 +1,16 @@
-const fs = require('fs/promises');
+import * as fs from 'fs/promises';
+import {
+    NoteBlockStudioHeader,
+    NoteBlockStudioLayer,
+    NoteBlockStudioTick,
+} from './interfaces';
 
 /**
  * Reads a Note Block Studio file.
  * @param {string} fileName The NBS file to open.
  * @returns Header and iterator for noteblock details.
  */
-async function read (fileName) {
+export async function read (fileName: string) {
     const fd = await fs.open(fileName, 'r');
 
     try {
@@ -25,7 +30,7 @@ async function read (fileName) {
  * @param {string} fileName The NBS file to open.
  * @returns Header and noteblock details.
  */
-async function readAll (fileName) {
+export async function readAll (fileName: string) {
     const fd = await fs.open(fileName, 'r');
 
     try {
@@ -43,7 +48,7 @@ async function readAll (fileName) {
  * @param {fs.FileHandler} fd File descriptor
  * @returns Header details from NBS file.
  */
-async function readHeader(fd) {
+async function readHeader(fd: fs.FileHandle): Promise<NoteBlockStudioHeader> {
     const firstReadBlock = await bufferedRead(fd, 8);
     const [zeroes] = new Int16Array(firstReadBlock, 0, 1);
     const [version, instrumentCount] = new Int8Array(firstReadBlock, 2, 2);
@@ -96,7 +101,7 @@ async function readHeader(fd) {
  * @param {fs.FileHandler} fd File descriptor
  * @returns Tick, layer, and block information from NBS file.
  */
-async function readBlocks (fd) {
+async function readBlocks (fd: fs.FileHandle): Promise<NoteBlockStudioTick[]> {
     let rows = [];
     let noteblocks = 0;
     let currentTick = -1;
@@ -107,8 +112,8 @@ async function readBlocks (fd) {
         currentTick += jumpsUntilNextTick;
 
         if (jumpsUntilNextTick > 0) {
-            const row = {
-                layers: [],
+            const row: NoteBlockStudioTick = {
+                layers: [] as NoteBlockStudioLayer[],
                 tick: currentTick,
             };
 
@@ -151,7 +156,7 @@ async function readBlocks (fd) {
  * Creates an async generator that reads NBS track information tick by tick.
  * @param {fs.FileHandler} fd File descriptor
  */
-async function * readBlocksGen (fd) {
+async function * readBlocksGen (fd: fs.FileHandle): AsyncGenerator<NoteBlockStudioTick> {
     try {
         let noteblocks = 0;
         let currentTick = -1;
@@ -162,7 +167,7 @@ async function * readBlocksGen (fd) {
             currentTick += jumpsUntilNextTick;
 
             if (jumpsUntilNextTick > 0) {
-                const row = {
+                const row: NoteBlockStudioTick = {
                     layers: [],
                     tick: currentTick,
                 };
@@ -210,7 +215,7 @@ async function * readBlocksGen (fd) {
  * @param {number} length Number of bytes to read
  * @returns Buffer of data read in Array form
  */
-async function bufferedRead (fd, length) {
+async function bufferedRead (fd: fs.FileHandle, length: number) {
     const buffer = Buffer.alloc(length);
     await fd.read(buffer, 0, length);
 
@@ -222,16 +227,13 @@ async function bufferedRead (fd, length) {
  * @param {fs.FileHandler} fd File descriptor
  * @returns Resulting string read from NBS file
  */
-async function readPascalString (fd) {
+async function readPascalString (fd: fs.FileHandle) {
     const [pascalLength] = new Int32Array(await bufferedRead(fd, 4));
     if (pascalLength > 0) {
         const pascalString = new Uint8Array(await bufferedRead(fd, pascalLength));
 
         return pascalString.toString();
     }
-}
 
-module.exports = {
-    read,
-    readAll,
-};
+    return void 0;
+}

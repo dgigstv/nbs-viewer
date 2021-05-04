@@ -2,7 +2,18 @@
   "name": "nbs-viewer",
   "version": "0.0.1",
   "description": "Reads Note Block Song (.nbs) files",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "DGigsTV",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^15.0.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "files": [
+    "dist/**/*"
+  ]
 }
