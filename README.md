@@ -1,6 +1,15 @@
 # nbs-viewer
 
-JavaScript library for reading Minecraft Note Block Studio (.nbs) files. Only supports NBS files that are Version 5 and later. Not browser-compatible. Only meant for standalone Node usage.
+TypeScript library for reading Minecraft Note Block Studio (.nbs) files.
+
+## Limitations
+
+* Only supports NBS files that are Version 5 and later.
+* Not browser-compatible.
+* Only meant for standalone Node usage.
+* Does not support custom instrument or layer information parts of the file. Those will come later.
+
+***Note:*** The library is currently *very* alpha and does little error checking. Attempting to use it for an unintended purpose (i.e. reading an NBS file version <= 4) will result in undefined behavior.
 
 ## Usage
 
