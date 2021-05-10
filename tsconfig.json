@@ -40,7 +40,10 @@
       /* Advanced Options */
       "skipLibCheck": true                      /* Skip type checking of declaration files. */
   },
+  "exclude": [
+    "src/**/*.spec.ts"
+  ],
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ]
 }
